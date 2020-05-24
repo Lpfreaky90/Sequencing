@@ -6,12 +6,34 @@
 #include <thread>_dbdao.h
 #include <algorithm>
 #include <vector>activation.h
+#include "Utilities.h"
 
 using namespace std;
 
 class Sequence
 {
 public:
+	struct ProteinName
+	{
+		string longName;
+		string shortName;
+	};
+
+	struct proteinInfo {
+		string proteinSequence;
+		int startPosition;
+		int baseLength;
+		string OGSequence;
+	};
+
+	struct info
+	{
+		string name;
+		int numberOfProteins;
+		string sequence;
+		vector<proteinInfo> proteins;
+	};
+
 	/* Transcribes RNA to mRNA*/
 	string Transcribe(string input);
 	
@@ -19,14 +41,12 @@ public:
 	string TtoU(string input);
 
 	/*Gets the protein sequences from start-end proteins.*/
-	vector<string> GetProteins(vector<string> input);
+	vector<Sequence::proteinInfo> GetProteins(vector<string> input);
 
 	/*Get the protein sequences*/
 	vector<string> Translate(string input);
 
-	struct ProteinName
-	{
-		string longName;
-		string shortName;
-	};
+	info GetProteinInformation(string name, string sequence, bool turnDNAintoRNA);
+
+	vector<Sequence::proteinInfo> FillInTheBlanks(vector<Sequence::proteinInfo> info, string OGSequence);
 };

@@ -1,5 +1,4 @@
 #include "Sequence.h"
-
 using namespace std;
 
 enum ProteinNamingType { shortName, longName};
@@ -114,10 +113,10 @@ string Sequence::TtoU(string input){
 }
 
 /*now that we have the sequences, look for the actual coding sequences with an open and close.*/
-vector<string> Sequence::GetProteins(vector<string> sequences) {
-	vector<string> foundSequences;
-	for (string sequence : sequences) {
-		cout << "Starting sequence" << endl;
+vector<Sequence::proteinInfo> Sequence::GetProteins(vector<string> sequences) {
+	vector<Sequence::proteinInfo> foundSequences;
+	for (int i = 0; i < sequences.size(); i++) {
+		string sequence = sequences[i];
 		int startCodonPosition = sequence.find(startCodon, 0);
 		while (startCodonPosition != -1)
 		{
@@ -135,13 +134,16 @@ vector<string> Sequence::GetProteins(vector<string> sequences) {
 			}
 
 			if (endCodonFound) {
-				cout << "-" << codingSequence << endl;
-				foundSequences.push_back(codingSequence);
+				int start = startCodonPosition / codonLength;
+				int length = (codingSequence.length() / codonLength) * 3;
+
+				foundSequences.push_back({ codingSequence , start, length , ""});
 			}
 
 			startCodonPosition = sequence.find(startCodon, startCodonPosition + 1);
 		}
 	}
+	return foundSequences;
 }
 
 /*RNA -> protein Sequence*/
@@ -167,3 +169,21 @@ vector<string> Sequence::Translate(string input) {
 
 	return proteinSequences;
 };
+
+vector<Sequence::proteinInfo> Sequence::FillInTheBlanks(vector<Sequence::proteinInfo> info, string OGSequence) {
+	vector<Sequence::proteinInfo> result;
+	for (Sequence::proteinInfo information : info) {
+		information.OGSequence = OGSequence.substr(information.startPosition, information.baseLength - 1);
+		result.push_back(information);
+	}
+	return result;
+}
+
+Sequence::info Sequence::GetProteinInformation(string name, string sequence, bool turnDNAintoRNA = false) {
+	string mRNAsequence = turnDNAintoRNA ? Transcribe(sequence) : TtoU(sequence);
+	vector<string> proteinSequences = Translate(mRNAsequence);
+	vector< Sequence::proteinInfo>proteinInfo = GetProteins(proteinSequences);
+	proteinInfo = FillInTheBlanks(proteinInfo, sequence);
+	return info{ name, (int)proteinInfo.size(), sequence, proteinInfo };
+}
+
