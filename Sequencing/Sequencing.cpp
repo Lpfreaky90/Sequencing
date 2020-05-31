@@ -1,5 +1,4 @@
 // Sequencing.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 #pragma once
 #include <iostream>
 #include "Sequence.h"
@@ -64,8 +63,6 @@ int main(int argc, char* argv[])
     Sequence::info information = sequencer.GetProteinInformation(fileName, sequence, false);
     Utilities::PrintMessageInColor("Press any button to close",36);
     IOUtils::saveToDisk(fileName, IOUtils::infoToJson(information));
-
-
 
     string asdf;
     cin >> asdf;
