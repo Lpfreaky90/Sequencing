@@ -8,6 +8,6 @@ class IOUtils
 {
 public:
 	static string infoToJson(Sequence::info information);
-	static string saveToDisk(string filename, string fileContent);
+	static void saveToDisk(string filename, string fileContent);
 };
 

@@ -3,7 +3,7 @@ using namespace std;
 
 enum ProteinNamingType { shortName, longName};
 
-ProteinNamingType namingType = shortName;
+ProteinNamingType namingType = longName;
 
 //define variables based on the namingType we use;
 string startCodon = namingType == shortName ? "M" : "Met";
@@ -115,7 +115,7 @@ string Sequence::TtoU(string input){
 /*now that we have the sequences, look for the actual coding sequences with an open and close.*/
 vector<Sequence::proteinInfo> Sequence::GetProteins(vector<string> sequences) {
 	vector<Sequence::proteinInfo> foundSequences;
-	for (int i = 0; i < sequences.size(); i++) {
+	for (int i = 0; i < 3; i++) {
 		string sequence = sequences[i];
 		int startCodonPosition = sequence.find(startCodon, 0);
 		while (startCodonPosition != -1)
@@ -134,7 +134,7 @@ vector<Sequence::proteinInfo> Sequence::GetProteins(vector<string> sequences) {
 			}
 
 			if (endCodonFound) {
-				int start = startCodonPosition / codonLength;
+				int start = (startCodonPosition / codonLength) * 3 + i;
 				int length = (codingSequence.length() / codonLength) * 3;
 
 				foundSequences.push_back({ codingSequence , start, length , ""});
@@ -162,6 +162,10 @@ vector<string> Sequence::Translate(string input) {
 
 			if (result != proteins.end()) {
 				proteinSequence += namingType == shortName ? result->second.shortName : result->second.longName;
+			}
+			else {
+				//handle for proteins that aren't found.
+				proteinSequence += namingType == shortName ? "?" : "???";
 			}
 		}
 		proteinSequences[j] = proteinSequence;

@@ -33,7 +33,7 @@ string IOUtils::infoToJson(Sequence::info information) {
 	return result;
 }
 
-string  IOUtils::saveToDisk(string filename, string fileContent) {
+void  IOUtils::saveToDisk(string filename, string fileContent) {
 	ofstream file;
 	file.open(filename + ".json");
 	file << fileContent;
