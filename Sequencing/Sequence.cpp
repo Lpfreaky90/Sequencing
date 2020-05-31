@@ -177,7 +177,7 @@ vector<string> Sequence::Translate(string input) {
 vector<Sequence::proteinInfo> Sequence::FillInTheBlanks(vector<Sequence::proteinInfo> info, string OGSequence) {
 	vector<Sequence::proteinInfo> result;
 	for (Sequence::proteinInfo information : info) {
-		information.OGSequence = OGSequence.substr(information.startPosition, information.baseLength - 1);
+		information.OGSequence = OGSequence.substr(information.startPosition, information.baseLength + 3);
 		result.push_back(information);
 	}
 	return result;
